@@ -36,6 +36,7 @@ padding:10px 15px;
 background:#10a37f;
 border:none;
 color:white;
+cursor:pointer;
 }
 </style>
 </head>
@@ -57,18 +58,34 @@ async function ask(){
 
 const q=document.getElementById("q").value;
 
+if(!q){
+alert("単語を入力してください");
+return;
+}
+
+document.getElementById("chat").innerHTML="検索中...";
+
+try{
+
 const res=await fetch("/api/ask",{
 method:"POST",
 headers:{
 "Content-Type":"application/json"
 },
-body:JSON.stringify({q})
+body:JSON.stringify({q:q})
 });
 
 const data=await res.json();
 
 document.getElementById("chat").innerHTML=
 "<h3>"+q+"</h3><p>"+data.answer+"</p>";
+
+}catch(e){
+
+document.getElementById("chat").innerHTML=
+"エラー: APIに接続できません";
+
+}
 
 }
 
