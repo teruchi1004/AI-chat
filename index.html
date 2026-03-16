@@ -1,34 +1,97 @@
-// api/ask.js
-export default async function handler(req, res) {
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>AI辞典</title>
+<style>
+body {
+  font-family: Meiryo;
+  background: #343541;
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+header {
+  background: #202123;
+  padding: 15px;
+  text-align: center;
+}
+#chat {
+  padding: 20px;
+  max-width: 800px;
+  margin: auto;
+}
+input {
+  width: 80%;
+  padding: 10px;
+  font-size: 16px;
+}
+button {
+  padding: 10px 15px;
+  background: #10a37f;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+.message {
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+.user {
+  background: #444;
+}
+.ai {
+  background: #202123;
+}
+</style>
+</head>
+<body>
+
+<header>AI辞典</header>
+
+<div id="chat"></div>
+
+<div style="text-align:center;padding:20px;">
+  <input id="q" placeholder="用語を検索">
+  <button onclick="ask()">検索</button>
+</div>
+
+<script>
+async function ask() {
+  const q = document.getElementById("q").value;
+  if (!q) {
+    alert("単語を入力してください");
+    return;
+  }
+
+  const chat = document.getElementById("chat");
+  chat.innerHTML += `<div class="message user"><b>質問:</b> ${q}</div>`;
+  chat.innerHTML += `<div class="message ai"><b>AI:</b> 検索中...</div>`;
+  chat.scrollTop = chat.scrollHeight;
+
   try {
-    const q = req.body.q;
-    if (!q) {
-      return res.status(400).json({ answer: "質問が空です" });
-    }
-
-    // Gemini API に問い合わせ
-    const r = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" +
-        process.env.GEMINI_API_KEY,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: q }] }]
-        })
-      }
-    );
-
-    const data = await r.json();
-
-    // 返答をJSONで返す
-    res.status(200).json({
-      answer:
-        data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-        "AIからの回答が取得できませんでした"
+    const res = await fetch("/api/ask", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ q })
     });
+    const data = await res.json();
+
+    const messages = chat.querySelectorAll(".ai");
+    messages[messages.length - 1].innerHTML = `<b>AI:</b> ${data.answer}`;
+    chat.scrollTop = chat.scrollHeight;
   } catch (e) {
-    console.error("ask.js error:", e);
-    res.status(500).json({ answer: "API呼び出しに失敗しました" });
+    const messages = chat.querySelectorAll(".ai");
+    messages[messages.length - 1].innerHTML = "<b>AI:</b> エラー: APIに接続できません";
   }
 }
+
+// Enterキーでも送信
+document.getElementById("q").addEventListener("keydown", function(e){
+  if(e.key === "Enter") ask();
+});
+</script>
+
+</body>
+</html>
