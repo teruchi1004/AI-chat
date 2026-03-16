@@ -1,2 +1,5 @@
-# AI-chat
-AI
+ai-dictionary
+│
+├ index.html
+└ api
+   └ ask.js
