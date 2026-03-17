@@ -1,6 +1,6 @@
-AI-chat
-│
-├ index.html
-├ vercel.json
-└ api
-   └ ask.js
+AI-chat/
+├─ api/
+│   ├─ ask.js
+│   ├─ generate.js
+├─ index.html
+├─ vercel.json 
