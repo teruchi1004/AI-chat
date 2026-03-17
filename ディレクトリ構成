@@ -1,0 +1,7 @@
+my-gemini-app/
+├─ pages/
+│   ├─ index.js        ← フロントUI
+├─ pages/api/
+│   ├─ ask.js          ← Gemini API呼び出し（バックエンド）
+├─ .env.local           ← APIキーを保存
+├─ package.json
