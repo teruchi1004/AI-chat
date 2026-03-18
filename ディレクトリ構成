@@ -1,5 +1,5 @@
-/（ルート）
- ├─ package.json   ← ここ重要
+/（ルート)
+ ├─ package.json
  ├─ pages
  │    ├─ index.js
  │    └─ api
