@@ -1,7 +1,6 @@
-/my-ai-search
- ├─ /pages
- │    └─ index.js
- ├─ /api
- │    └─ ask.js
- ├─ .env.local
- └─ package.json
+/（ルート）
+ ├─ package.json   ← ここ重要
+ ├─ pages
+ │    ├─ index.js
+ │    └─ api
+ │         └─ ask.js
