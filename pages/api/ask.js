@@ -14,11 +14,17 @@ export default async function handler(req, res) {
         })
       }
     );
+    
+    if(!response.ok) {
+      throw new Error(`APIエラー: ${response.status}`);
+    }
+    
     const data = await response.json();
     const answer = data.candidates?.[0]?.content?.parts?.[0]?.text || "回答なし";
+    
     res.json({answer});
   } catch(error) {
-    console.error(error);
-    res.status(500).json({error:"AIエラー"});
+    console.error("Gemini Error:", error);
+    res.status(500).json({error: error.message});
   }
 }
