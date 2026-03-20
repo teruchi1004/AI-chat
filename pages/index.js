@@ -33,7 +33,7 @@ export default function Home() {
 
   return (
     <div style={{ maxWidth: 600, margin: "50px auto", padding: 20, fontFamily: "sans-serif" }}>
-      <h1>Gemini チャット</h1>
+      <h1>AI検索</h1>
       <form onSubmit={handleSubmit} style={{ display: "flex", marginTop: 20 }}>
         <input
           type="text"
