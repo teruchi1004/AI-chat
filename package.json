@@ -7,9 +7,6 @@
     "build": "next build",
     "start": "next start"
   },
-  "engines": {
-    "node": "18.x"
-  },
   "dependencies": {
     "next": "latest",
     "react": "latest",
