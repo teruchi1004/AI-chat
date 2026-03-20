@@ -1,23 +1,24 @@
-// pages/api/ask.js
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
 export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "POST only" });
-  }
-
-  const { q } = req.body;
-  if (!q) return res.status(400).json({ error: "Query required" });
-
+  if(req.method !== "POST") return res.status(405).json({error:"POSTのみ"});
+  const {q} = req.body;
+  if(!q) return res.status(400).json({error:"質問必須"});
+  
   try {
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const result = await model.generateContent(q);
-    const answer = await result.response.text();
-
-    res.json({ answer });
-  } catch (error) {
-    console.error("Gemini Error:", error.message);
-    res.status(500).json({ error: error.message });
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      {
+        method: "POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({
+          contents:[{parts:[{text:q}]}]
+        })
+      }
+    );
+    const data = await response.json();
+    const answer = data.candidates?.[0]?.content?.parts?.[0]?.text || "回答なし";
+    res.json({answer});
+  } catch(error) {
+    console.error(error);
+    res.status(500).json({error:"AIエラー"});
   }
 }
